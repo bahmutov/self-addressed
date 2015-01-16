@@ -1,0 +1,23 @@
+{
+  "name": "self-addressed",
+  "version": "0.0.1",
+  "description": "Transform postMessage to return a promise",
+  "license": "MIT",
+  "homepage": "https://github.com/bahmutov/self-addressed",
+  "authors": [
+    "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src",
+    "test",
+    "tests",
+    "docs",
+    "Gruntfile.js",
+    "package.json",
+    "images"
+  ],
+  "main": "dist/iframe-api.js"
+}
