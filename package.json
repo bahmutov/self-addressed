@@ -7,10 +7,12 @@
     "url": "https://github.com/bahmutov/self-addressed/issues"
   },
   "contributors": [],
+  "dependencies": {
+    "es6-promise": "2.0.1"
+  },
   "devDependencies": {
     "check-more-types": "1.1.1",
     "check-types": "1.4.0",
-    "es6-promise": "2.0.1",
     "eslint-rules": "0.2.0",
     "grunt": "0.4.5",
     "grunt-contrib-jshint": "0.10.0",

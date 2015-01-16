@@ -1,5 +1,10 @@
+require('es6-promise').polyfill();
+
 /* eslint no-use-before-define:0 */
-function peel(cargo) {
+function open(envelope) {
+  return envelope.payload;
+
+  /*
   var defer = stamp.__deferred[cargo.stamp];
   if (defer) {
     if (typeof defer.resolve !== 'function') {
@@ -13,7 +18,7 @@ function peel(cargo) {
     }
     var result = Array.isArray(cargo.payload.args) && cargo.payload.args[0];
     defer.resolve(result);
-  }
+  }*/
 }
 
 function hasBeenStamped(cargo) {
@@ -49,7 +54,7 @@ function stamp(mailman, address, data) {
       typeof mailman !== 'object') {
       throw new Error('expected just data ' + JSON.stringify(arguments));
     }
-    peel(mailman);
+    return open(mailman);
   }
 }
 

@@ -10,6 +10,21 @@
 
 Available on NPM and bower under name `self-addressed`.
 
+Provides single function `stamp(mailman, address, data)`, that returns a Promise.
+
+## Example
+
+```js
+var stamp = require('self-addressed');
+var mailman = function (address, letter) {
+    address.postMessage(letter, '*');
+};
+stamp(mailman, window, { foo: 'foo' })
+    .then(function (response) {
+        console.log('got response to our letter', response);
+    });
+```
+
 ### Small print
 
 Author: Gleb Bahmutov &copy; 2015
