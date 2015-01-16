@@ -41,6 +41,10 @@
   ],
   "license": "MIT",
   "main": "index.js",
+  "pre-commit": [
+    "grunt",
+    "npm version"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/bahmutov/self-addressed.git"
