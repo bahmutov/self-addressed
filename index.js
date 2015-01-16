@@ -49,6 +49,12 @@ function deliver(mailman, address, data) {
 function stamp(mailman, address, data) {
   if (typeof mailman === 'function') {
     return deliver(mailman, address, data);
+  } else if (arguments.length === 2 && hasBeenStamped(mailman)) {
+    var envelope = mailman;
+    data = address;
+    console.log('resealing envelope', envelope);
+    envelope.payload = data;
+    return envelope;
   } else {
     if (arguments.length !== 1 ||
       typeof mailman !== 'object') {
