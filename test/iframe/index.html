@@ -16,6 +16,14 @@
     <script>
       console.log('loading index.html');
       la(typeof selfAddressed === 'function', 'cannot find selfAddressed fn');
+
+      window.onmessage = function (event) {
+        console.log('index.html has received event', JSON.stringify(event.data));
+      };
+
+      function mailman(address, msg) {
+        address.postMessage(msg, '*');
+      }
     </script>
 </body>
 </html>

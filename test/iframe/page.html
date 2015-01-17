@@ -14,6 +14,20 @@
   <script>
     console.log('loading page.html');
     la(typeof selfAddressed === 'function', 'cannot find selfAddressed fn');
+
+    function mailman(address, msg) {
+      address.postMessage(msg, '*');
+    }
+
+    window.onmessage = function (event) {
+      console.log('page has received event', JSON.stringify(event.data));
+    };
+
+    selfAddressed(mailman, parent, 'foo')
+      .then(function (response) {
+        console.log('got response from parent iframe');
+        console.log(response);
+      });
   </script>
 </body>
 </html>
