@@ -10,8 +10,10 @@
   <h2>this page is iframed</h2>
 
   <script src="../../dist/self-addressed.js"></script>
+  <script src="../../node_modules/lazy-ass/index.js"></script>
   <script>
     console.log('loading page.html');
+    la(typeof selfAddressed === 'function', 'cannot find selfAddressed fn');
   </script>
 </body>
 </html>
