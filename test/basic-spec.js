@@ -2,6 +2,7 @@ require('lazy-ass');
 var check = require('check-more-types');
 
 describe('self-addressed', function () {
+  'use strict';
   var stamp = require('..');
 
   it('is a single function', function () {
@@ -22,8 +23,7 @@ describe('self-addressed', function () {
     deliver: function (envelope) {
       console.log('delivered envelope to bar', envelope);
 
-      var open = stamp;
-      var letter = open(envelope);
+      var letter = stamp(envelope);
       la(letter === 'bar', 'invalid letter contents for bar', letter);
     }
   };
@@ -32,8 +32,11 @@ describe('self-addressed', function () {
   var resealed;
   var resealAddress = {
     deliver: function (envelope) {
+      la(envelope, 'has envelope object');
+      console.log('envelope to reseal', envelope);
       resealed = stamp(envelope, 'bar');
       la(resealed === envelope, 'keeps same envelope');
+      console.log('resealed envelope', resealed);
     }
   };
 
@@ -41,12 +44,16 @@ describe('self-addressed', function () {
   var liveAddress = {
     deliver: function (envelope) {
       console.log('delivered envelope', envelope);
+      la(envelope.stamp, 'envelope is missing stamp', envelope);
 
-      var open = stamp;
-      var letter = open(envelope);
+      var letter = stamp(envelope); // open
       la(letter === 'foo', 'invalid letter contents', letter);
+      la(envelope.stamp, 'envelope is missing stamp', envelope);
 
+      // put new value into the envelope
       stamp(envelope, 'bar');
+      la(envelope.stamp, 'envelope is missing stamp', envelope);
+
       stamp(mailman, barAddress, envelope);
     }
   };
@@ -55,7 +62,9 @@ describe('self-addressed', function () {
     la(address, 'missing address');
     la(arguments.length === 2, 'missing letter', arguments);
     la(check.fn(address.deliver), 'address.deliver missing', address);
-    address.deliver(letter);
+    setTimeout(function () {
+      address.deliver(letter);
+    }, 0);
   };
 
   it('delivers letter', function () {
@@ -68,17 +77,26 @@ describe('self-addressed', function () {
     la(check.fn(receipt.then), 'has .then');
   });
 
-  it('can reseal envelope', function () {
+  it.skip('can reseal envelope', function (done) {
     stamp(mailman, resealAddress, 'foo');
-    la(resealed, 'has resealed envelope');
-    var response = stamp(resealed);
-    la(response === 'bar', 'resealed envelope has new letter', response);
+    setTimeout(function () {
+      console.log('finished delivery');
+      la(resealed, 'has resealed envelope');
+      var response = stamp(resealed);
+      la(response === 'bar', 'resealed envelope has new letter', response);
+      done();
+    }, 0);
   });
 
-  it.skip('can return in the same envelope', function () {
+  it.skip('can return in the same envelope', function (done) {
     var receipt = stamp(mailman, liveAddress, 'foo');
-    return receipt.then(function (envelope) {
-      la(envelope, 'got back envelope', envelope);
+    console.log('receipt', receipt);
+    la(receipt, 'has receipt');
+
+    receipt.then(function (letter) {
+      console.log('response letter', letter);
+      la(letter, 'got back letter', letter);
+      done();
     });
   });
 });
