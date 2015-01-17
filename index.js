@@ -7,19 +7,23 @@ function open(envelope) {
   var defer = stamp.__deferred[envelope.stamp];
   if (defer) {
     console.log('received response', envelope);
-    if (typeof defer.resolve !== 'function') {
-      throw new Error('missing resolve method for ' + envelope.stamp);
-    }
-    delete envelope.stamp;
-    delete stamp.__deferred[envelope.stamp];
-    // TODO handle errors by calling defer.reject
-    if (!envelope.payload) {
-      throw new Error('missing payload in', envelope);
-    }
-    console.log('resolving with payload', envelope.payload);
-    defer.resolve(envelope.payload);
+    setTimeout(function () {
+      if (typeof defer.resolve !== 'function') {
+        throw new Error('missing resolve method for ' + envelope.stamp);
+      }
+      delete envelope.stamp;
+      delete stamp.__deferred[envelope.stamp];
+      // TODO handle errors by calling defer.reject
+      if (!envelope.payload) {
+        throw new Error('missing payload in', envelope);
+      }
+      console.log('resolving with payload', envelope.payload);
+      defer.resolve(envelope.payload);
+      console.log('after resolve');
+    }, 0);
   }
 
+  console.log('returning payload', envelope);
   return envelope.payload;
 }
 
@@ -67,6 +71,9 @@ function stamp(mailman, address, data) {
     }
     return open(mailman);
   }
+
+  console.log('reached unhandled path', arguments);
+  throw new Error('Incorrect stamp');
 }
 
 var id = 0;

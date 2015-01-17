@@ -46,14 +46,19 @@ describe('self-addressed', function () {
       console.log('delivered envelope', envelope);
       la(envelope.stamp, 'envelope is missing stamp', envelope);
 
+      console.log('opening envelope in liveAddress', envelope);
       var letter = stamp(envelope); // open
+      console.log('opened envelope in liveAddress', envelope, 'letter', letter);
+
       la(letter === 'foo', 'invalid letter contents', letter);
       la(envelope.stamp, 'envelope is missing stamp', envelope);
 
-      // put new value into the envelope
+      console.log('putting new value into the envelope', envelope);
       stamp(envelope, 'bar');
       la(envelope.stamp, 'envelope is missing stamp', envelope);
+      console.log('put new letter into envelope', envelope);
 
+      console.log('sending the response back to barAddress', envelope);
       stamp(mailman, barAddress, envelope);
     }
   };
@@ -77,7 +82,7 @@ describe('self-addressed', function () {
     la(check.fn(receipt.then), 'has .then');
   });
 
-  it.skip('can reseal envelope', function (done) {
+  it('can reseal envelope', function (done) {
     stamp(mailman, resealAddress, 'foo');
     setTimeout(function () {
       console.log('finished delivery');
@@ -85,10 +90,10 @@ describe('self-addressed', function () {
       var response = stamp(resealed);
       la(response === 'bar', 'resealed envelope has new letter', response);
       done();
-    }, 0);
+    }, 10);
   });
 
-  it.skip('can return in the same envelope', function (done) {
+  it('can return in the same envelope', function (done) {
     var receipt = stamp(mailman, liveAddress, 'foo');
     console.log('receipt', receipt);
     la(receipt, 'has receipt');
