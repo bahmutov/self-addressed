@@ -21,12 +21,16 @@
 
     window.onmessage = function (event) {
       console.log('page has received event', JSON.stringify(event.data));
+      selfAddressed(event.data);
     };
 
     selfAddressed(mailman, parent, 'foo')
       .then(function (response) {
-        console.log('got response from parent iframe');
-        console.log(response);
+        console.log('got response from parent iframe', response);
+        if (response !== '2bar') {
+          console.log('throwing error');
+          throw new Error('page has received wrong response ' + response);
+        }
       });
   </script>
 </body>
