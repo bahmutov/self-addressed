@@ -2,6 +2,7 @@
 module.exports = function (grunt) {
   var sourceFiles = ['index.js'];
   var testFiles = ['test/*-spec.js'];
+  var globalName = 'selfAddressed';
 
   grunt.initConfig({
 
@@ -54,6 +55,27 @@ module.exports = function (grunt) {
         files: [sourceFiles, testFiles],
         tasks: ['test', 'lint']
       }
+    },
+
+    'clean-console': {
+      test: {
+        options: {
+          url: 'test/iframe/index.html',
+          timeout: 1 // seconds to wait for any errors
+        }
+      }
+    },
+
+    browserify: {
+      src: {
+        options: {
+          browserifyOptions: {
+            standalone: globalName
+          }
+        },
+        src: ['index.js'],
+        dest: 'dist/self-addressed.js'
+      }
     }
   });
 
@@ -61,6 +83,6 @@ module.exports = function (grunt) {
   plugins.forEach(grunt.loadNpmTasks);
 
   grunt.registerTask('lint', ['filenames', 'jshint', 'eslint', 'jscs']);
-  grunt.registerTask('test', ['mochaTest']);
-  grunt.registerTask('default', ['deps-ok', 'nice-package', 'lint', 'sync', 'test']);
+  grunt.registerTask('test', ['mochaTest', 'clean-console']);
+  grunt.registerTask('default', ['deps-ok', 'nice-package', 'lint', 'sync', 'browserify', 'test']);
 };
