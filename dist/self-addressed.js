@@ -24,7 +24,7 @@ function open(envelope) {
     }, 0);
   }
 
-  console.log('returning payload', envelope);
+  console.log('returning payload from envelope', envelope);
   return envelope.payload;
 }
 
@@ -56,6 +56,8 @@ function deliver(mailman, address, data) {
 }
 
 function stamp(mailman, address, data) {
+  console.log(arguments);
+
   if (typeof mailman === 'function') {
     return deliver(mailman, address, data);
   } else if (arguments.length === 2 && hasBeenStamped(mailman)) {
@@ -64,7 +66,7 @@ function stamp(mailman, address, data) {
     data = address;
     envelope.payload = data;
     return envelope;
-  } else {
+  } else if (arguments.length === 1 && hasBeenStamped(mailman)) {
     console.log('opening envelope?', mailman);
     if (arguments.length !== 1 ||
       typeof mailman !== 'object') {
@@ -73,8 +75,11 @@ function stamp(mailman, address, data) {
     return open(mailman);
   }
 
-  console.log('reached unhandled path', arguments);
-  throw new Error('Incorrect stamp');
+  // do not have an envelope or stamp
+  if (data && data.payload) {
+    return data.payload;
+  }
+  return data;
 }
 
 var id = 0;

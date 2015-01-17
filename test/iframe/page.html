@@ -27,7 +27,7 @@
     selfAddressed(mailman, parent, 'foo')
       .then(function (response) {
         console.log('got response from parent iframe', response);
-        if (response !== '2bar') {
+        if (response !== 'bar') {
           console.log('throwing error');
           throw new Error('page has received wrong response ' + response);
         }

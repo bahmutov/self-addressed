@@ -16,13 +16,57 @@ Provides single function `stamp(mailman, address, data)`, that returns a Promise
 
 ```js
 var stamp = require('self-addressed');
-var mailman = function (address, letter) {
-    address.postMessage(letter, '*');
+var mailman = function (address, envelope) {
+    address.postMessage(envelope, '*');
 };
 stamp(mailman, window, { foo: 'foo' })
     .then(function (response) {
         console.log('got response to our letter', response);
     });
+```
+
+## Api
+
+Single function `selfAddressed` can do 3 things at once
+
+* selfAddressed(mailman, address, data) - can deliver data via `mailman` to `address` and then
+returns a promise that resolves with response.
+* selfAddressed(envelope, letter) - puts `letter` into valid `enveloper` to be delivered back as 
+a response.
+* selfAddressed(envelope) - returns either the letter stored in the `envelope` or `undefined` if this
+is an invalid envelope.
+
+## Typical workflow
+
+**iframed page.html** that wants to communicate with the parent can `postMessage` and receive a reply
+
+```js
+function mailman(address, msg) {
+  address.postMessage(msg, '*');
+}
+window.onmessage = function (event) {
+  selfAddressed(event.data);
+};
+selfAddressed(mailman, parent, 'foo')
+  .then(function (response) {
+    console.log(response); // "bar"
+  });
+```
+
+**index page** that iframes `page.html` inside and uses `onmessage` to open the envelope,
+place new letter inside and send the response back to the source.
+
+```js
+function mailman(address, msg) {
+  address.postMessage(msg, '*');
+}
+window.onmessage = function (event) {
+  var letter = selfAddressed(event.data);
+  // if letter === undefined => not an envelope, handle differently!
+  var returnAddress = event.source;
+  selfAddressed(event.data, 'bar'); // places the letter into the same envelope
+  selfAddressed(mailman, returnAddress, event.data);
+};
 ```
 
 ### Small print

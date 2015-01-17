@@ -13,8 +13,10 @@ describe('self-addressed', function () {
     deliver: function (envelope) {
       console.log('delivered envelope', envelope);
 
-      var open = stamp;
-      var letter = open(envelope);
+      var letter = stamp(envelope); // open envelope
+      if (letter.payload) {
+        letter = letter.payload;
+      }
       la(letter === 'foo', 'invalid letter contents', letter);
     }
   };
@@ -24,6 +26,9 @@ describe('self-addressed', function () {
       console.log('delivered envelope to bar', envelope);
 
       var letter = stamp(envelope);
+      if (!letter) {
+        letter = envelope.payload || envelope;
+      }
       la(letter === 'bar', 'invalid letter contents for bar', letter);
     }
   };
@@ -76,6 +81,16 @@ describe('self-addressed', function () {
     stamp(mailman, address, 'foo');
   });
 
+  it('returns undefined if the data is not an envelope', function () {
+    var foo = stamp({ foo: 'foo' });
+    la(typeof foo === 'undefined');
+  });
+
+  it('returns letter if the data is an envelope', function () {
+    var foo = stamp({ payload: 'foo', stamp: '1' });
+    la(foo === 'foo');
+  });
+
   it('returns a promise', function () {
     var receipt = stamp(mailman, address, 'foo');
     la(check.object(receipt), 'got receipt');
@@ -90,7 +105,7 @@ describe('self-addressed', function () {
       var response = stamp(resealed);
       la(response === 'bar', 'resealed envelope has new letter', response);
       done();
-    }, 10);
+    }, 50);
   });
 
   it('can return in the same envelope', function (done) {
@@ -101,6 +116,7 @@ describe('self-addressed', function () {
     receipt.then(function (letter) {
       console.log('response letter', letter);
       la(letter, 'got back letter', letter);
+      la(letter === 'bar', 'response letter is bar', letter);
       done();
     });
   });
