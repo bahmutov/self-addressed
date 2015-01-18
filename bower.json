@@ -19,5 +19,5 @@
     "package.json",
     "images"
   ],
-  "main": "dist/iframe-api.js"
+  "main": "dist/self-addressed.js"
 }
