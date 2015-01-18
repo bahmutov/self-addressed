@@ -9,6 +9,8 @@ describe('self-addressed', function () {
       console.log('got delivered envelope', envelope);
       if (selfAddressed.is(envelope)) {
         console.log('this is self-addressed');
+        var letter = selfAddressed(envelope);
+        la(letter === 'foo', 'has correct letter', envelope);
         return true;
       }
     }

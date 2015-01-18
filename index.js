@@ -3,15 +3,18 @@ require('es6-promise').polyfill();
 /* eslint no-use-before-define:0 */
 function open(envelope) {
   console.log('opening envelope', envelope);
-  console.log(stamp.__deferred);
-  var defer = stamp.__deferred[envelope.stamp];
-  if (defer) {
-    console.log('received response', envelope);
-    var letter = envelope.payload;
-    setTimeout(function () {
+
+  if (envelope.replies) {
+    console.log('this envelope is a reply', envelope.replies);
+    console.log(stamp.__deferred);
+    var defer = stamp.__deferred[envelope.stamp];
+    if (defer) {
+      console.log('received response', envelope);
+      var letter = envelope.payload;
       if (typeof defer.resolve !== 'function') {
         throw new Error('missing resolve method for ' + envelope.stamp);
       }
+      console.log('resolving with payload', letter, 'for stamp', envelope.stamp);
       delete envelope.stamp;
       delete stamp.__deferred[envelope.stamp];
 
@@ -20,11 +23,10 @@ function open(envelope) {
       // throw new Error('missing payload in', envelope);
       // }
 
-      console.log('resolving with payload', letter);
       defer.resolve(letter);
       console.log('after resolve');
-    }, 0);
-    return;
+      return;
+    }
   }
 
   console.log('returning payload from envelope', envelope);
@@ -42,8 +44,14 @@ function deliver(mailman, address, data) {
     id += 1;
     cargo = {
       payload: data,
-      stamp: String(id)
+      stamp: String(id),
+      replies: 0
     };
+  } else {
+    if (typeof cargo.replies !== 'number') {
+      throw new Error('Cannot find replies property ' + JSON.stringify(cargo));
+    }
+    cargo.replies += 1;
   }
 
   setTimeout(function () {

@@ -80,27 +80,27 @@ describe('self-addressed', function () {
     }, 0);
   };
 
-  it.skip('delivers letter', function () {
+  it('delivers letter', function () {
     stamp(mailman, address, 'foo');
   });
 
-  it.skip('returns undefined if the data is not an envelope', function () {
+  it('returns undefined if the data is not an envelope', function () {
     var foo = stamp({ foo: 'foo' });
     la(typeof foo === 'undefined');
   });
 
-  it.skip('returns letter if the data is an envelope', function () {
+  it('returns letter if the data is an envelope', function () {
     var foo = stamp({ payload: 'foo', stamp: '1' });
     la(foo === 'foo');
   });
 
-  it.skip('returns a promise', function () {
+  it('returns a promise', function () {
     var receipt = stamp(mailman, address, 'foo');
     la(check.object(receipt), 'got receipt');
     la(check.fn(receipt.then), 'has .then');
   });
 
-  it.skip('can reseal envelope', function (done) {
+  it('can reseal envelope', function (done) {
     stamp(mailman, resealAddress, 'foo');
     setTimeout(function () {
       console.log('finished delivery');
