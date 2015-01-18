@@ -1,6 +1,6 @@
 {
   "name": "self-addressed",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Transform postMessage to return a promise",
   "license": "MIT",
   "homepage": "https://github.com/bahmutov/self-addressed",

@@ -67,7 +67,7 @@ function deliver(mailman, address, data) {
 }
 
 function stamp(mailman, address, data) {
-  console.log(arguments);
+  // console.log(arguments);
 
   if (typeof mailman === 'function') {
     return deliver(mailman, address, data);
