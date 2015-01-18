@@ -7,20 +7,24 @@ function open(envelope) {
   var defer = stamp.__deferred[envelope.stamp];
   if (defer) {
     console.log('received response', envelope);
+    var letter = envelope.payload;
     setTimeout(function () {
       if (typeof defer.resolve !== 'function') {
         throw new Error('missing resolve method for ' + envelope.stamp);
       }
       delete envelope.stamp;
       delete stamp.__deferred[envelope.stamp];
+
       // TODO handle errors by calling defer.reject
-      if (!envelope.payload) {
-        throw new Error('missing payload in', envelope);
-      }
-      console.log('resolving with payload', envelope.payload);
-      defer.resolve(envelope.payload);
+      // if (!letter) {
+      // throw new Error('missing payload in', envelope);
+      // }
+
+      console.log('resolving with payload', letter);
+      defer.resolve(letter);
       console.log('after resolve');
     }, 0);
+    return;
   }
 
   console.log('returning payload from envelope', envelope);
@@ -80,6 +84,10 @@ function stamp(mailman, address, data) {
   }
   return data;
 }
+
+stamp.is = function is(data) {
+  return hasBeenStamped(data);
+};
 
 var id = 0;
 stamp.__deferred = {};

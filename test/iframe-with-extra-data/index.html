@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <title>self-addressed</title>
+  <script src="../../bower_components/es5-shim/es5-shim.js"></script>
+</head>
+<body>
+    <h2>self-addressed</h2>
+    <p>Sending both self-addressed envelope and other data</p>
+
+    <script src="../../dist/self-addressed.js"></script>
+    <script src="../../node_modules/lazy-ass/index.js"></script>
+
+    <iframe id="page" src="page.html" width="100%" height="500"></iframe>
+
+    <script>
+      console.log('loading index.html');
+      la(typeof selfAddressed === 'function', 'cannot find selfAddressed fn');
+
+      function mailman(address, msg) {
+        address.postMessage(msg, '*');
+      }
+
+      window.onmessage = function (event) {
+        console.log('index.html has received event', JSON.stringify(event.data));
+        var letter = selfAddressed(event.data);
+        console.log('index.html has received letter', letter);
+        la(letter === 'foo', 'correct letter', letter);
+        var returnAddress = event.source;
+
+        // reply with regular data
+        mailman(returnAddress, 'baz');
+      };
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <title>iframed page</title>
+  <script src="../../bower_components/es5-shim/es5-shim.js"></script>
+</head>
+<body>
+  <h2>this page is iframed</h2>
+  <p>It sends self-addressed envelope, but receives back normal data</p>
+
+  <script src="../../dist/self-addressed.js"></script>
+  <script src="../../node_modules/lazy-ass/index.js"></script>
+  <script>
+    console.log('loading page.html');
+    la(typeof selfAddressed === 'function', 'cannot find selfAddressed fn');
+
+    function mailman(address, msg) {
+      address.postMessage(msg, '*');
+    }
+
+    window.onmessage = function (event) {
+      console.log('page has received event', JSON.stringify(event.data));
+      la(event.data === 'baz', 'received plain data');
+      la(!selfAddressed(event.data), 'there is no letter', event.data);
+    };
+
+    var selfAddressedResponse;
+
+    selfAddressed(mailman, parent, 'foo')
+      .then(function (response) {
+        selfAddressedResponse = response;
+        la(false, 'should not have received self-addressed response', response);
+      });
+
+    setTimeout(function () {
+      la(!selfAddressedResponse, 'should not have self-addressed response', selfAddressedResponse);
+    }, 10);
+  </script>
+</body>
+</html>

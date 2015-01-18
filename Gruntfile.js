@@ -58,10 +58,17 @@ module.exports = function (grunt) {
     },
 
     'clean-console': {
-      test: {
+      options: {
+        timeout: 1 // seconds to wait for any errors
+      },
+      iframe: {
         options: {
-          url: 'test/iframe/index.html',
-          timeout: 1 // seconds to wait for any errors
+          url: 'test/iframe/index.html'
+        }
+      },
+      'iframe-with-extra-data': {
+        options: {
+          url: 'test/iframe-with-extra-data/index.html'
         }
       }
     },

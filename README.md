@@ -69,6 +69,28 @@ window.onmessage = function (event) {
 };
 ```
 
+## Combined with other data
+
+Often we have other sources of data to be handled inside `onmessage` callback.
+One can ask if the received data is self-addressed to determine if it has been handled
+by `self-addressed` or not using `selfAddressed.is(envelope)`.
+
+```js
+window.onmessage = function (event) {
+  // event could be self-addressed envelope or not
+  if (selfAddressed.is(event.data)) {
+    var letter = selfAddressed(event.data);
+    if (!letter) {
+      // nothing to do - it has been handled via promise resolution
+    } else {
+      // handle letter, maybe reseal and send response?
+    }
+  } else {
+    // not an envelope - handle yourself
+  }
+}
+```
+
 ### Small print
 
 Author: Gleb Bahmutov &copy; 2015
