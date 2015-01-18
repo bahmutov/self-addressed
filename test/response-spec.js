@@ -7,7 +7,7 @@ describe('self-addressed', function () {
   describe('simple data vs envelope', function () {
     function to(envelope) {
       console.log('got delivered envelope', envelope);
-      if (selfAddressed(envelope)) {
+      if (selfAddressed.is(envelope)) {
         console.log('this is self-addressed');
         return true;
       }
