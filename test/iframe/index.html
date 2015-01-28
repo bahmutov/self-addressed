@@ -17,6 +17,8 @@
       console.log('loading index.html');
       la(typeof selfAddressed === 'function', 'cannot find selfAddressed fn');
 
+      selfAddressed.options.verbose = true;
+
       function mailman(address, msg) {
         address.postMessage(msg, '*');
       }

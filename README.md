@@ -29,12 +29,16 @@ stamp(mailman, window, { foo: 'foo' })
 
 Single function `selfAddressed` can do 3 things at once
 
-* selfAddressed(mailman, address, data) - can deliver data via `mailman` to `address` and then
+* `selfAddressed(mailman, address, data)` - can deliver data via `mailman` to `address` and then
 returns a promise that resolves with response.
-* selfAddressed(envelope, letter) - puts `letter` into valid `enveloper` to be delivered back as 
+* `selfAddressed(envelope, letter)` - puts `letter` into valid `enveloper` to be delivered back as 
 a response.
-* selfAddressed(envelope) - returns either the letter stored in the `envelope` or `undefined` if this
+* `selfAddressed(envelope)` - returns either the letter stored in the `envelope` or `undefined` if this
 is an invalid envelope.
+
+### Extras
+
+You can see verbose log messages by setting `selfAddressed.options.verbose = true;`
 
 ## Typical workflow
 
